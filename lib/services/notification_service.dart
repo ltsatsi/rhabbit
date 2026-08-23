@@ -19,9 +19,7 @@ class NotificationService {
     }
 
     // prepare android init settings
-    const initSettingsAndroid = AndroidInitializationSettings(
-      'notification_icon',
-    );
+    const initSettingsAndroid = AndroidInitializationSettings('light_app_icon');
 
     // prepare ios init settings
     const initSettingsIOS = DarwinInitializationSettings(
@@ -58,7 +56,7 @@ class NotificationService {
         channelDescription: 'Daily Notification Channel',
         importance: Importance.max,
         priority: Priority.high,
-        icon: 'notification_icon',
+        icon: 'light_app_icon',
       ),
 
       iOS: DarwinNotificationDetails(),

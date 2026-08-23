@@ -18,6 +18,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+  final _feedbackController = TextEditingController();
   final secionHeight = 25.0;
   bool systemDark = true;
   bool notificationsEnabled = false;
@@ -139,6 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 TextField(
                   maxLines: 4,
                   minLines: 3,
+                  controller: _feedbackController,
                   decoration: InputDecoration(
                     filled: true,
                     border: OutlineInputBorder(
@@ -183,7 +185,26 @@ class _SettingsPageState extends State<SettingsPage> {
                 // send button
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      final String feedback = _feedbackController.text.trim();
+                      if (feedback.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Share your thoughts by typing in the text area ..',
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(color: AppColor.lightText),
+                            ),
+                          ),
+                        );
+
+                        return;
+                      }
+
+                      Navigator.pop(context);
+
+                      _thankYouDialog();
+                    },
                     child: Text(
                       'Send',
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -194,6 +215,82 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _thankYouDialog() {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          content: SizedBox(
+            height: 220,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    // icon / animation
+                    Container(
+                      height: 65,
+                      width: 65,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: isDarkTheme
+                            ? const Color(0x564E4E4E)
+                            : const Color(0xFFDAD9D9),
+                      ),
+                      child: Icon(
+                        CupertinoIcons.heart,
+                        size: 40,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+
+                    // title
+                    Text(
+                      'Thank you',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+
+                // desc
+                Text(
+                  'Your feedback has been sent. We appreciate you taking the time to help us improve.',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: AppColor.muted),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _feedbackController.clear();
+                },
+                child: Text(
+                  'Done',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.lightText,
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -459,7 +556,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       // sign user out
                       context.read<AuthViewModel>().signOut();
 
-                      Navigator.pushNamed(context, RouteManager.signInPage);
+                      Navigator.pushReplacementNamed(
+                        context,
+                        RouteManager.signInPage,
+                      );
                     },
                     child: Text(
                       'Delete',
