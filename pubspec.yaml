@@ -16,6 +16,7 @@ dependencies:
   flutter_local_notifications: ^22.3.0
   flutter_localizations:
     sdk: flutter
+  flutter_native_splash: ^2.4.8
   google_fonts: ^8.2.1
   google_sign_in: ^7.2.0
   heatmap_calendar_plus: ^2.3.0
@@ -38,3 +39,19 @@ flutter:
     - assets/images/logos/
     - assets/animations/
     - assets/sounds/
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  color_dark: "#0F0F0F"
+  image: assets/images/icons/light_splash_icon.png
+  image_dark: assets/images/icons/dark_splash_icon.png
+
+  fullscreen: true
+
+  android_12:
+    icon_background_color: "#ECECEC"
+    icon_background_color_dark: "#0F0F0F"
+    image: assets/images/icons/light_splash_icon.png
+    image_dark: assets/images/icons/dark_splash_icon.png
+
+  web: false
